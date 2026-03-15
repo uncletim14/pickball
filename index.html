@@ -308,6 +308,10 @@
       <label>備註</label>
       <textarea id="notes" placeholder="其他注意事項（例：請穿著不留痕運動鞋...）"></textarea>
     </div>
+    <!-- 行事曆區塊 -->
+    <div class="field-row">
+      <button class="submit-btn" style="background:#27ae60;margin-top:10px" onclick="downloadCalendarEvent()">加入行事曆</button>
+    </div>
   </div>
 
   <!-- ── 社群連結 ── -->
@@ -384,6 +388,68 @@
 <div id="toast"></div>
 
 <script>
+  // 產生 iCal 檔案內容並下載
+  function downloadCalendarEvent() {
+    // 取得活動資訊
+    const title = '匹克球活動';
+    const description = (document.getElementById('notes').value || '').replace(/\n/g, '\\n');
+    const location = document.getElementById('location').value || '';
+    const startRaw = document.getElementById('openTime').value || '';
+    const timeSlot = document.getElementById('timeSlot').value || '';
+
+    // 嘗試解析日期時間
+    // 假設格式：2025/06/01 (日) 09:00
+    let startDate = '';
+    let endDate = '';
+    const dateMatch = startRaw.match(/(\d{4})[\/-](\d{1,2})[\/-](\d{1,2}).*?(\d{1,2}):(\d{2})/);
+    if (dateMatch) {
+      const [_, y, m, d, h, min] = dateMatch;
+      startDate = `${y}${m.padStart(2,'0')}${d.padStart(2,'0')}T${h.padStart(2,'0')}${min}00`;
+      // 嘗試解析 timeSlot 例：09:00–12:00
+      const slotMatch = timeSlot.match(/(\d{1,2}):(\d{2})[–-](\d{1,2}):(\d{2})/);
+      if (slotMatch) {
+        const [__, sh, smin, eh, emin] = slotMatch;
+        endDate = `${y}${m.padStart(2,'0')}${d.padStart(2,'0')}T${eh.padStart(2,'0')}${emin}00`;
+      } else {
+        // 若無 timeSlot，預設 3 小時
+        const startObj = new Date(`${y}-${m}-${d}T${h}:${min}:00`);
+        const endObj = new Date(startObj.getTime() + 3*60*60*1000);
+        endDate = `${endObj.getFullYear()}${String(endObj.getMonth()+1).padStart(2,'0')}${String(endObj.getDate()).padStart(2,'0')}T${String(endObj.getHours()).padStart(2,'0')}${String(endObj.getMinutes()).padStart(2,'0')}00`;
+      }
+    } else {
+      alert('請正確填寫「開團時間」(如：2025/06/01 (日) 09:00)');
+      return;
+    }
+
+    // 產生 iCal 內容
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Pickleball Event//TW',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `DTSTART;TZID=Asia/Taipei:${startDate}`,
+      `DTEND;TZID=Asia/Taipei:${endDate}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${description}`,
+      `LOCATION:${location}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+
+    // 下載
+    const blob = new Blob([ics], {type:'text/calendar'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'PickleballEvent.ics';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
   // ==========================================
   // ⚠️ 請在這裡貼上你在 Formspree 申請到的 API 端點 URL
   // 例如: 'https://formspree.io/f/mxgvwqpo'
