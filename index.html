@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>匹克球活動報名表單</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: #f0f7f4; /* 改為稍微帶點運動場的清爽淺綠背景 */
+      color: #333;
+      font-size: 15px;
+    }
+    .container {
+      max-width: 820px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* ── 資訊區塊 ── */
+    .info-section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 20px;
+      margin-bottom: 18px;
+      border-top: 5px solid #2ecc71; /* 匹克球綠色點綴 */
+    }
+    .info-section h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .field-row {
+      margin-bottom: 14px;
+    }
+    .field-row label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .field-row input[type="text"],
+    .field-row textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field-row input[type="text"]:focus,
+    .field-row textarea:focus {
+      border-color: #2ecc71;
+    }
+    .field-row textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+    .field-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ── 社群連結 ── */
+    .social-section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .social-section span {
+      font-size: 14px;
+      color: #555;
+    }
+    .social-links {
+      display: flex;
+      gap: 10px;
+    }
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+    }
+    .fb-btn  { background: #1877f2; }
+    .ig-btn  { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+    .th-btn  { background: #000; }
+
+    /* ── 報名輸入區 ── */
+    .register-section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 20px;
+      margin-bottom: 18px;
+      border-top: 5px solid #3498db;
+    }
+    .register-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .add-person-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .add-person-row span { font-size: 14px; }
+    .add-btn {
+      width: 28px; height: 28px;
+      background: #3498db; color: #fff;
+      border: none; border-radius: 50%;
+      font-size: 20px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .add-btn:hover { background: #2980b9; }
+
+    /* 每筆人員輸入 */
+    .person-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      flex-wrap: wrap;
+    }
+    .gender-group { display: flex; gap: 6px; align-items: center; }
+    .gender-group label { font-size: 14px; display:flex; align-items:center; gap:3px; cursor:pointer; }
+    .member-check { display: flex; align-items: center; gap: 4px; font-size: 14px; cursor: pointer; }
+    .person-entry input[type="text"] {
+      flex: 1;
+      min-width: 120px;
+      padding: 7px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .person-entry input[type="text"]:focus { border-color:#3498db; outline:none; }
+    .del-btn {
+      background: none; border: none; cursor: pointer;
+      color: #e74c3c; font-size: 18px; line-height: 1; padding: 0 4px;
+    }
+    .del-btn:hover { color: #c0392b; }
+
+    /* 送出按鈕 */
+    .submit-row {
+      text-align: right;
+      margin-top: 14px;
+    }
+    .submit-btn {
+      background: #e67e22; color: #fff;
+      border: none; border-radius: 24px;
+      padding: 10px 28px;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .submit-btn:hover { background: #d35400; }
+    .submit-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+
+    /* ── 統計 ── */
+    .stats-section {
+      margin-bottom: 8px;
+    }
+    .stats-section p {
+      font-size: 16px;
+      font-weight: 700;
+      color: #27ae60;
+      margin-bottom: 2px;
+    }
+
+    /* ── 名單表格 ── */
+    .table-section {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+    .table-section h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th {
+      background: #2ecc71;
+      color: #fff;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f7fbff; }
+    .remove-row-btn {
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 4px;
+      padding: 3px 8px; font-size: 12px; cursor: pointer;
+    }
+    .remove-row-btn:hover { background: #c0392b; }
+
+    /* ── 版本 ── */
+    .version { font-size: 12px; color: #aaa; margin-top: 12px; }
+
+    /* ── Toast 通知 ── */
+    #toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #333; color: #fff; padding: 10px 22px; border-radius: 20px;
+      font-size: 14px; opacity: 0; pointer-events: none;
+      transition: opacity .3s; z-index: 9999;
+    }
+    #toast.show { opacity: 1; }
+
+    @media (max-width: 560px) {
+      .field-2col { grid-template-columns: 1fr; }
+      .social-section { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ── 活動資訊填寫 ── -->
+  <div class="info-section">
+    <h2>🏓 匹克球活動資訊設定</h2>
+
+    <div class="field-row">
+      <label>開團時間</label>
+      <input type="text" id="openTime" placeholder="例：2025/06/01 (日) 09:00" />
+    </div>
+
+    <div class="field-row">
+      <label>地點</label>
+      <input type="text" id="location" placeholder="例：台北市○○匹克球場 1號場" />
+    </div>
+
+    <div class="field-row">
+      <label>每人費用</label>
+      <input type="text" id="fee" placeholder="例：200 元" />
+    </div>
+
+    <div class="field-row">
+      <label>上限人數</label>
+      <input type="text" id="maxTotal" placeholder="例：16" />
+    </div>
+
+    <div class="field-2col">
+      <div class="field-row">
+        <label>男生上限</label>
+        <input type="text" id="maxMale" placeholder="例：8" />
+      </div>
+      <div class="field-row">
+        <label>女生上限</label>
+        <input type="text" id="maxFemale" placeholder="例：8" />
+      </div>
+    </div>
+
+    <div class="field-row">
+      <label>程度限制 (DUPR / 級別)</label>
+      <input type="text" id="skillLevel" placeholder="例：新手友善 (2.0 - 3.0)" />
+    </div>
+
+    <div class="field-row">
+      <label>球拍租借</label>
+      <input type="text" id="paddleRental" placeholder="例：可租借，單次 50 元" />
+    </div>
+
+    <div class="field-row">
+      <label>候補順序</label>
+      <input type="text" id="waitlistOrder" placeholder="例：依報名時間先後" />
+    </div>
+
+    <div class="field-row">
+      <label>時間</label>
+      <input type="text" id="timeSlot" placeholder="例：09:00–12:00" />
+    </div>
+
+    <div class="field-row">
+      <label>備註</label>
+      <textarea id="notes" placeholder="其他注意事項（例：請穿著不留痕運動鞋...）"></textarea>
+    </div>
+  </div>
+
+  <!-- ── 社群連結 ── -->
+  <div class="social-section">
+    <span>追蹤活動社群</span>
+    <div class="social-links">
+      <button class="social-btn fb-btn" onclick="openSocial('fb')" title="Facebook">f</button>
+      <button class="social-btn ig-btn" onclick="openSocial('ig')" title="Instagram">IG</button>
+      <button class="social-btn th-btn" onclick="openSocial('th')" title="Threads">Th</button>
+    </div>
+  </div>
+
+  <!-- ── 報名輸入區 ── -->
+  <div class="register-section">
+    <h3>請輸入報名資訊</h3>
+    <div class="add-person-row">
+      <span>增加人員 ➔</span>
+      <button class="add-btn" onclick="addPersonEntry()" title="新增人員">+</button>
+    </div>
+
+    <div id="personList"></div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submitBtn" onclick="submitList()">送出名單並寄送通知信</button>
+    </div>
+  </div>
+
+  <!-- ── 統計 ── -->
+  <div class="stats-section">
+    <p>正選總人數：<span id="mainCount">0</span> 人</p>
+    <p>候補總人數：<span id="waitCount">0</span> 人</p>
+  </div>
+
+  <!-- ── 正選男生 ── -->
+  <div class="table-section">
+    <h4>正選男生</h4>
+    <table>
+      <thead><tr><th>#</th><th>性別</th><th>名字</th><th>誰幫喊</th><th>會員</th><th>操作</th></tr></thead>
+      <tbody id="tableMaleMain"></tbody>
+    </table>
+  </div>
+
+  <!-- ── 正選女生 ── -->
+  <div class="table-section">
+    <h4>正選女生</h4>
+    <table>
+      <thead><tr><th>#</th><th>性別</th><th>名字</th><th>誰幫喊</th><th>會員</th><th>操作</th></tr></thead>
+      <tbody id="tableFemaleMain"></tbody>
+    </table>
+  </div>
+
+  <!-- ── 候補名單 ── -->
+  <div class="table-section">
+    <h4>候補名單</h4>
+    <table>
+      <thead><tr><th>#</th><th>性別</th><th>名字</th><th>誰幫喊</th><th>會員</th><th>操作</th></tr></thead>
+      <tbody id="tableWaitlist"></tbody>
+    </table>
+  </div>
+
+  <!-- ── 人員紀錄 ── -->
+  <div class="table-section">
+    <h4>人員紀錄</h4>
+    <table>
+      <thead><tr><th>#</th><th>性別</th><th>名字</th><th>誰幫喊</th><th>會員</th><th>動作</th></tr></thead>
+      <tbody id="tableHistory"></tbody>
+    </table>
+  </div>
+
+  <p class="version">version: 2.0.0 (Pickleball Edition)</p>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+  // ==========================================
+  // ⚠️ 請在這裡貼上你在 Formspree 申請到的 API 端點 URL
+  // 例如: 'https://formspree.io/f/mxgvwqpo'
+  // ==========================================
+  const FORMSPREE_ENDPOINT = 'YOUR_FORMSPREE_ENDPOINT'; 
+
+  /* ── 人員輸入列 ── */
+  let personCounter = 0;
+
+  function addPersonEntry(genderDefault) {
+    personCounter++;
+    const id = 'person_' + personCounter;
+    const div = document.createElement('div');
+    div.className = 'person-entry';
+    div.id = id;
+    div.innerHTML = `
+      <div class="gender-group">
+        <label><input type="radio" name="gender_${id}" value="男" checked /> 男</label>
+        <label><input type="radio" name="gender_${id}" value="女" /> 女</label>
+      </div>
+      <label class="member-check"><input type="checkbox" id="mem_${id}" /> 會員</label>
+      <input type="text" id="nick_${id}" placeholder="暱稱" />
+      <button class="del-btn" onclick="removePerson('${id}')" title="刪除">🗑</button>
+    `;
+    document.getElementById('personList').appendChild(div);
+  }
+
+  function removePerson(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  /* ── 資料存儲 ── */
+  const data = {
+    maleMain:    [],  // { name, member, by }
+    femaleMain:  [],
+    waitlist:    [],
+    history:     []
+  };
+
+  /* ── 送出名單並發送 Email ── */
+  async function submitList() {
+    const maxTotal  = parseInt(document.getElementById('maxTotal').value) || Infinity;
+    const maxMale   = parseInt(document.getElementById('maxMale').value)  || Infinity;
+    const maxFemale = parseInt(document.getElementById('maxFemale').value)|| Infinity;
+
+    const entries = document.querySelectorAll('.person-entry');
+    if (entries.length === 0) { showToast('請先新增人員！'); return; }
+
+    let addedSomeone = false;
+
+    entries.forEach(entry => {
+      const id     = entry.id;
+      const genderInputs = entry.querySelectorAll(`input[name="gender_${id}"]`);
+      let gender = '男';
+      genderInputs.forEach(r => { if (r.checked) gender = r.value; });
+      const member = document.getElementById('mem_' + id)?.checked ? '✔' : '';
+      const nick   = (document.getElementById('nick_' + id)?.value || '').trim();
+      
+      if (!nick) return;
+      addedSomeone = true;
+
+      const record = { name: nick, gender, member, by: '本人', time: new Date().toLocaleTimeString('zh-TW') };
+      data.history.push(record);
+
+      const mainCount = data.maleMain.length + data.femaleMain.length;
+      const isMainFull = mainCount >= maxTotal;
+      const isMaleFull = gender === '男' && data.maleMain.length >= maxMale;
+      const isFemaleFull = gender === '女' && data.femaleMain.length >= maxFemale;
+
+      if (!isMainFull && !isMaleFull && !isFemaleFull) {
+        if (gender === '男') data.maleMain.push(record);
+        else data.femaleMain.push(record);
+      } else {
+        data.waitlist.push(record);
+      }
+    });
+
+    if (!addedSomeone) {
+      showToast('請填寫暱稱！');
+      return;
+    }
+
+    // 清除輸入列
+    document.getElementById('personList').innerHTML = '';
+    personCounter = 0;
+    addPersonEntry(); // 自動補回一行空白的讓下次方便填寫
+
+    renderTables();
+    updateStats();
+    
+    // 開始發送 Email
+    await sendEmailNotification();
+  }
+
+  /* ── 將資料整理為純文字信件內容 ── */
+  function generateEmailText() {
+    const info = {
+      time: document.getElementById('openTime').value || '(未填寫)',
+      location: document.getElementById('location').value || '(未填寫)',
+      fee: document.getElementById('fee').value || '(未填寫)',
+      skillLevel: document.getElementById('skillLevel').value || '(未填寫)',
+      paddleRental: document.getElementById('paddleRental').value || '(未填寫)'
+    };
+
+    let text = `🏓 匹克球活動最新報名狀況通知 🏓\n\n`;
+    text += `【活動資訊】\n`;
+    text += `時間：${info.time}\n`;
+    text += `地點：${info.location}\n`;
+    text += `費用：${info.fee}\n`;
+    text += `程度限制：${info.skillLevel}\n`;
+    text += `球拍租借：${info.paddleRental}\n\n`;
+
+    text += `【正選男生名單】（共 ${data.maleMain.length} 人）\n`;
+    data.maleMain.forEach((p, i) => text += `${i + 1}. ${p.name} ${p.member ? '(會員)' : ''}\n`);
+    if(data.maleMain.length === 0) text += `尚無報名\n`;
+
+    text += `\n【正選女生名單】（共 ${data.femaleMain.length} 人）\n`;
+    data.femaleMain.forEach((p, i) => text += `${i + 1}. ${p.name} ${p.member ? '(會員)' : ''}\n`);
+    if(data.femaleMain.length === 0) text += `尚無報名\n`;
+
+    text += `\n【候補名單】（共 ${data.waitlist.length} 人）\n`;
+    data.waitlist.forEach((p, i) => text += `${i + 1}. ${p.name} (${p.gender}) ${p.member ? '(會員)' : ''}\n`);
+    if(data.waitlist.length === 0) text += `無\n`;
+
+    return text;
+  }
+
+  /* ── 呼叫 Formspree API 寄信 ── */
+  async function sendEmailNotification() {
+    if (FORMSPREE_ENDPOINT === 'YOUR_FORMSPREE_ENDPOINT') {
+      showToast('⚠️ 名單已更新在網頁！(Email 未設定，請至程式碼填寫 Formspree API)');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = "發送郵件中...";
+
+    const emailBody = generateEmailText();
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          subject: "🎾 匹克球活動報名更新通知",
+          message: emailBody,
+          // 如果 Formspree 設定需要特定欄位，可以在這邊加入
+          // email: "coolkerry2003@gmail.com" 
+        })
+      });
+
+      if (response.ok) {
+        showToast('✅ 名單已更新，並成功寄送信件到您的信箱！');
+      } else {
+        showToast('❌ 名單已更新，但信件發送失敗！');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('❌ 網路錯誤，信件發送失敗！');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "送出名單並寄送通知信";
+    }
+  }
+
+
+  /* ── 從名單移除 ── */
+  function removeFromList(listName, idx) {
+    const record = data[listName][idx];
+    data[listName].splice(idx, 1);
+    // 若從正選移除，候補補位
+    if ((listName === 'maleMain' || listName === 'femaleMain') && data.waitlist.length > 0) {
+      const gender = record.gender;
+      const wIdx = data.waitlist.findIndex(p => p.gender === gender);
+      if (wIdx !== -1) {
+        const promoted = data.waitlist.splice(wIdx, 1)[0];
+        if (gender === '男') data.maleMain.push(promoted);
+        else data.femaleMain.push(promoted);
+        showToast(`${promoted.name} 已從候補晉升正選！`);
+      }
+    }
+    renderTables();
+    updateStats();
+  }
+
+  /* ── 渲染表格 ── */
+  function renderTable(tbodyId, list, listName) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:14px">（尚無人員）</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map((p, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${p.gender}</td>
+        <td>${p.name}</td>
+        <td>${p.by}</td>
+        <td>${p.member}</td>
+        <td><button class="remove-row-btn" onclick="removeFromList('${listName}',${i})">移除</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function renderHistoryTable() {
+    const tbody = document.getElementById('tableHistory');
+    if (!tbody) return;
+    if (data.history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:14px">（尚無紀錄）</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.history.map((p, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${p.gender}</td>
+        <td>${p.name}</td>
+        <td>${p.by}</td>
+        <td>${p.member}</td>
+        <td style="color:#aaa;font-size:12px">${p.time}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderTables() {
+    renderTable('tableMaleMain',   data.maleMain,   'maleMain');
+    renderTable('tableFemaleMain', data.femaleMain, 'femaleMain');
+    renderTable('tableWaitlist',   data.waitlist,   'waitlist');
+    renderHistoryTable();
+  }
+
+  /* ── 統計 ── */
+  function updateStats() {
+    document.getElementById('mainCount').textContent = data.maleMain.length + data.femaleMain.length;
+    document.getElementById('waitCount').textContent = data.waitlist.length;
+  }
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── 社群連結 ── */
+  function openSocial(type) {
+    const urls = {
+      fb: 'https://www.facebook.com',
+      ig: 'https://www.instagram.com',
+      th: 'https://www.threads.net'
+    };
+    window.open(urls[type], '_blank');
+  }
+
+  /* 初始化一列輸入 */
+  addPersonEntry();
+  renderTables();
+</script>
+</body>
+</html>
